@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Pain Profile — Katie Jean</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Quattrocento+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* =====================================================
+   Results page — additional styles
+   ===================================================== */
+
+/* ---- Intro screen ---- */
+.intro-card {
+  padding: 0;
+  overflow: hidden;
+}
+.intro-hero {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+.intro-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 31%;
+  display: block;
+}
+.intro-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 24px 28px 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+}
+.intro-logo {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+}
+.intro-course-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+.intro-content {
+  padding: 28px 28px 32px;
+}
+.intro-content h1 {
+  margin-top: 0;
+}
+
+.results-section { margin-bottom: 36px; }
+
+/* ---- Name input ---- */
+.name-input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 28px;
+  outline: none;
+  transition: border-color 0.15s;
+  display: block;
+}
+.name-input:focus { border-color: var(--accent); }
+
+/* Multi-select hint */
+.multi-hint {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+.option.multi.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.option.multi.selected::before {
+  content: '✓  ';
+  color: var(--accent);
+}
+
+/* Skip link */
+.skip-link {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+.skip-link:hover { color: var(--ink); }
+
+/* ---- Results page intro ---- */
+.results-intro {
+  margin-bottom: 28px;
+}
+.results-intro h1 { margin-bottom: 16px; }
+.results-intro .greeting {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ---- Neuropathy notice ---- */
+.neuropathy-notice {
+  background: #fff8e8;
+  border: 1px solid #e8d5a0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  color: #7a6020;
+  line-height: 1.7;
+}
+.neuropathy-notice strong { color: #5a4010; display: block; margin-bottom: 4px; }
+
+/* ---- Chronicity panel ---- */
+.chronicity-panel {
+  padding: 0;
+  margin: 0;
+}
+.results-header-card {
+  padding: 0;
+  overflow: visible;
+}
+.results-header-card .intro-hero {
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+}
+.results-header-card .intro-content {
+  padding: 20px 28px 36px;
+}
+.chronicity-panel h3 {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+.chron-axis-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.chron-track-wrap {
+  position: relative;
+  margin-bottom: 40px;
+}
+.chron-track {
+  height: 10px;
+  background: linear-gradient(to right, #d4e0c4, #f0e4a0);
+  border-radius: 999px;
+}
+.chron-divider {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 18px;
+  background: white;
+  border-radius: 1px;
+}
+.chron-divider-label {
+  position: absolute;
+  top: 18px;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  color: #8a7866;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.chron-marker {
+  position: absolute;
+  top: -7px;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  background: var(--ink-soft);
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+.chron-you-label {
+  position: absolute;
+  top: 22px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.chron-verdict {
+  text-align: center;
+}
+.chron-verdict-label {
+  font-family: var(--font-head);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+}
+.chron-verdict-sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: block;
+}
+
+/* ---- Radar section ---- */
+.radar-section {
+  margin-bottom: 32px;
+}
+.radar-section h3 {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  margin: 0 0 4px;
+}
+.section-intro {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+.radar-section .section-intro {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+.radar-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  margin-bottom: -16px;
+}
+
+/* ---- Factor cards ---- */
+.factor-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.factor-card {
+  border-radius: 14px;
+  padding: 18px;
+}
+.factor-card.blush   { background: #f0e4a0; }
+.factor-card.sage    { background: #c8d8b8; }
+.factor-card.lavender{ background: #ead5d0; }
+.factor-card.gold    { background: #e8e2d4; }
+.fc-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.fc-pct {
+  font-family: var(--font-head);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.fc-tier {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+.fc-copy {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ---- Deep-dive panels ---- */
+.deepdive-panel {
+  background: #ffffff;
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.deepdive-panel h3 {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  margin: 0 0 4px;
+}
+.deepdive-panel .section-intro {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+
+/* Two-column bar-card grid */
+.bar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.bar-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.bar-card-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.bar-card-tier {
+  font-size: 11px;
+  color: #a09080;
+  margin-bottom: 7px;
+}
+.bar-track  {
+  height: 8px;
+  background: #ede8e3;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.7s ease;
+}
+.bar-fill.blush    { background: #c9a830; }
+.bar-fill.sage     { background: #b8c0b0; }
+.bar-fill.gold     { background: #ddd0a0; }
+.bar-fill.lavender { background: #c8c0dc; }
+.bar-fill.forest   { background: #a89878; }
+.bar-card-copy {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---- Trigger boxes ---- */
+.section-h3 {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  margin: 0 0 4px;
+}
+.trigger-boxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.trigger-box {
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+}
+.trigger-box.physical { background: #c8d8b8; }
+.trigger-box.nervous  { background: #f0e4a0; }
+.trigger-box.hormonal { background: #ead5d0; }
+.tb-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.tb-count {
+  font-family: var(--font-head);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.tb-sub {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+.tb-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(0,0,0,0.07);
+  margin-bottom: 8px;
+}
+.tb-triggers {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tb-trigger-item {
+  font-size: 10px;
+  color: var(--ink);
+  line-height: 1.4;
+  padding-left: 10px;
+  position: relative;
+}
+.tb-trigger-item::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+}
+.trigger-summary {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin-bottom: 0;
+}
+
+/* ---- Recovery panel ---- */
+.recovery-panel {
+  background: #ffffff;
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.recovery-panel h3 {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  margin: 0 0 4px;
+}
+.recovery-panel .section-intro {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+}
+.bc-rows { display: flex; flex-direction: column; gap: 12px; }
+.bc-row {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.bc-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  margin-top: 1px;
+}
+.bc-icon-sleep   { background: #d4e0c4; }
+.bc-icon-disrupt { background: #f0dfc0; }
+.bc-icon-rest    { background: #f0ebe0; }
+.bc-content { flex: 1; min-width: 0; }
+.bc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 7px;
+}
+.bc-label { font-size: 13px; font-weight: 700; color: var(--ink); }
+.bc-val   { font-size: 13px; color: var(--ink-soft); }
+.bc-scale {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  margin-bottom: 5px;
+}
+.bc-seg {
+  flex: 1;
+  background: #ede8e3;
+  border-radius: 99px;
+}
+.bc-seg.seg-good { background: #6e8860; }
+.bc-seg.seg-mid  { background: #ddd090; }
+.bc-seg.seg-low  { background: #d4a8a0; }
+.bc-ideal { font-size: 11px; color: #a09080; margin-bottom: 6px; }
+.bc-note  { font-size: 12px; color: var(--ink-soft); line-height: 1.55; }
+
+/* ---- Window of Tolerance ---- */
+.wot-section { margin-bottom: 32px; }
+.wot-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.wot-chart-wrap {
+  background: #faf7f4;
+  border-radius: 12px;
+  padding: 14px 10px 10px;
+  text-align: center;
+}
+.wot-chart-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.wot-signals-label {
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+.wot-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wot-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.wot-pill.hyper  { background: #f0e4a0; color: #7a6010; }
+.wot-pill.freeze { background: #d4e4c4; color: #3a5428; }
+.wot-pill.calm   { background: #f0ebe0; color: #7a5a38; }
+.wot-pill-icon { font-size: 15px; flex-shrink: 0; }
+
+/* ---- Identity echo ---- */
+.identity-echo {
+  background: #f9f0ec;
+  border-left: 3px solid var(--button-bg);
+  border-radius: 0 14px 14px 0;
+  padding: 18px 20px;
+  margin-bottom: 32px;
+}
+.identity-echo p {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ---- Roadmap ---- */
+.roadmap-head {
+  margin-bottom: 20px;
+}
+.roadmap-head h2 {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.roadmap-head p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.roadmap-rows { margin-bottom: 8px; }
+.roadmap-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+.roadmap-row:last-child { margin-bottom: 0; }
+.rm-icon {
+  width: 48px;
+  height: 52px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 4px;
+}
+.rm-num {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.rm-lbl {
+  font-size: 7.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-top: 1px;
+}
+.rm-d1 { background: #f5f0ea; } .rm-d1 .rm-num, .rm-d1 .rm-lbl { color: #8a7866; }
+.rm-d2 { background: #f5f0ea; } .rm-d2 .rm-num, .rm-d2 .rm-lbl { color: #8a7866; }
+.rm-d3 { background: #f5f0ea; } .rm-d3 .rm-num, .rm-d3 .rm-lbl { color: #8a7866; }
+.rm-d4 { background: #f5f0ea; } .rm-d4 .rm-num, .rm-d4 .rm-lbl { color: #8a7866; }
+.rm-d5 { background: #f5f0ea; } .rm-d5 .rm-num, .rm-d5 .rm-lbl { color: #8a7866; }
+.rm-content { flex: 1; padding-top: 4px; }
+.rm-title {
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.rm-pill {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+.rm-pill.ns       { background: #f0e4a0; color: #7a6010; }
+.rm-pill.hormonal { background: #ead5d0; color: #8a4858; }
+.rm-pill.sensory  { background: #c8d8b8; color: #3a5030; }
+.rm-pill.lifestyle{ background: #e8e2d4; color: #7a6a50; }
+.rm-copy {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin: 0;
+}
+.rm-divider {
+  height: 1px;
+  background: #f0e8e0;
+  margin: 0 0 18px 62px;
+}
+
+.footer-row {
+  text-align: center;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.snapshot-sub {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin: 0 0 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+/* ---- Mobile adjustments ---- */
+@media (max-width: 520px) {
+  .factor-cards          { grid-template-columns: 1fr 1fr; }
+  .bar-grid              { grid-template-columns: 1fr; }
+  .trigger-boxes         { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .trigger-box           { padding: 12px 6px; }
+  .tb-count              { font-size: 26px; }
+  .wot-charts            { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 380px) {
+  .trigger-boxes         { grid-template-columns: 1fr; }
+  .wot-charts            { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="brand-header" id="brand-header" hidden>
+    <img src="logo.png" alt="Katie Jean" class="brand-logo">
+  </div>
+
+  <!-- ===== INTRO ===== -->
+  <div class="card intro-card" id="intro-screen">
+    <div class="intro-hero">
+      <img src="intro-bg.jpg.png" alt="" class="intro-hero-img">
+    </div>
+    <div class="intro-brand">
+      <img src="logo.png" alt="Katie Jean" class="intro-logo">
+      <p class="intro-course-label">The 5 Day Back Reset</p>
+    </div>
+    <div class="intro-content">
+      <h1>Your Pain Profile</h1>
+      <p><strong>Ready to take the first step towards changing your pain story?</strong></p>
+      <p>Before we start the course, we're going to take a step back and look at the whole picture for a second. This questionnaire captures what's been driving your pain, pinpoints the areas that need attention, and gives us a clear picture of your nervous system activation — because understanding that is foundational to pain re-training.</p>
+      <p>It will take around five minutes. Answer as things feel for you right now.</p>
+      <button class="btn" style="margin-top:20px" id="start-btn">Let's get started</button>
+      <div style="text-align:center;margin-top:14px">
+        <button class="skip-link" id="preview-btn">Preview results page</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div class="card" id="quiz-screen" hidden>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="dimension-tag" id="dimension-tag"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="multi-hint" class="multi-hint" hidden>Select all that apply</div>
+    <div class="options" id="options"></div>
+    <div class="nav-row">
+      <button class="btn btn-ghost" id="back-btn">Back</button>
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="skip-link" id="skip-btn" hidden>Skip</button>
+        <button class="btn" id="next-btn" disabled>Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS ===== -->
+  <div id="results-screen" hidden></div>
+
+</div><!-- .app -->
+
+<script>
+/* ============================================================
+   DIMENSIONS — scoring axes
+   max values = sum of highest option scores across all
+   questions that feed that dimension.
+   ============================================================ */
+const DIMENSIONS = {
+  chronicity: { label: 'Chronicity',           short: 'Chronicity',    max: 5  },
+  nervous:    { label: 'Nervous System',        short: 'Nervous system',max: 38 },
+  sensory:    { label: 'Sensory Sensitivity',   short: 'Sensory',       max: 4  },
+  hormonal:   { label: 'Hormonal Influence',    short: 'Hormonal',      max: 4  },
+  lifestyle:  { label: 'Lifestyle load',        short: 'Lifestyle',     max: 17 },
+  impact:     { label: 'Pain impact',           short: 'Pain impact',   max: 16 }
+};
+
+/* ============================================================
+   QUESTIONS
+   Types:
+     'text'   — single text input (name)
+     'info'   — single-choice, personalisation only (no score)
+     'scored' — single-choice, contributes to dimension score(s)
+     'multi'  — multi-select; skipable:true allows skipping
+
+   Each scored option carries a key per dimension it feeds.
+   ============================================================ */
+const QUESTIONS = [
+  /* ---- PERSONALISATION ---- */
+  // NOTE: Name is not captured here — it will be passed in from Kajabi
+  // once the quiz is embedded. Replace the firstName placeholder in
+  // showResults() with the Kajabi merge tag at that point.
+  {
+    id: 'location',
+    type: 'multi',
+    skipable: false,
+    dimensionTag: 'Your pain',
+    text: 'Where does your pain tend to show up? Select all that apply.',
+    options: [
+      { label: 'Lower back' },
+      { label: 'Sacral area / tailbone' },
+      { label: 'Upper back or between shoulders' },
+      { label: 'Neck and shoulders' }
+    ]
+  },
+
+  /* ---- CHRONICITY + NSA (shared) ---- */
+  {
+    id: 'duration',
+    type: 'scored',
+    dimensions: ['chronicity', 'nervous'],
+    dimensionTag: 'Your pain',
+    text: 'How long have you been dealing with this pain?',
+    options: [
+      { label: 'Under 6 weeks',                                                     chronicity: 1, nervous: 0 },
+      { label: '6–12 weeks',                                                         chronicity: 2, nervous: 1 },
+      { label: '3–6 months',                                                         chronicity: 3, nervous: 2 },
+      { label: 'More than 6 months',                                                 chronicity: 4, nervous: 3 },
+      { label: 'For years — it comes and goes, or it\'s just always there',          chronicity: 5, nervous: 4 }
+    ]
+  },
+  {
+    id: 'severity',
+    type: 'scored',
+    dimensions: ['nervous', 'impact'],
+    dimensionTag: 'Your pain',
+    text: 'How much is this pain affecting your daily life right now?',
+    options: [
+      { label: 'It doesn\'t really affect my day-to-day',                            nervous: 0, impact: 0 },
+      { label: 'I notice it, but I manage fine',                                      nervous: 1, impact: 1 },
+      { label: 'I plan around it sometimes',                                          nervous: 2, impact: 2 },
+      { label: 'It\'s limiting things I enjoy or want to do',                         nervous: 3, impact: 3 },
+      { label: 'I\'m struggling with basic daily tasks',                              nervous: 4, impact: 4 }
+    ]
+  },
+  {
+    id: 'variability',
+    type: 'scored',
+    dimensions: ['nervous', 'impact'],
+    dimensionTag: 'Your pain',
+    text: 'How consistent is your pain — does it follow a clear pattern, or does it feel unpredictable?',
+    options: [
+      { label: 'I usually know what will trigger it',                                 nervous: 0, impact: 0 },
+      { label: 'Fairly predictable, but it varies a bit',                             nervous: 1, impact: 1 },
+      { label: 'A mix — sometimes predictable, sometimes not',                        nervous: 2, impact: 2 },
+      { label: 'Pretty unpredictable — it catches me off guard',                      nervous: 3, impact: 3 },
+      { label: 'Completely unpredictable — I never know what\'s coming',              nervous: 4, impact: 4 }
+    ]
+  },
+
+  /* ---- PAIN QUALITY (neuropathy flag) ---- */
+  {
+    id: 'quality',
+    type: 'multi',
+    skipable: false,
+    dimensionTag: 'Your pain',
+    text: 'How would you describe your pain most of the time?',
+    options: [
+      { label: 'Aching or dull',              neuropathy: false },
+      { label: 'Tight or stiff',              neuropathy: false },
+      { label: 'Sharp or stabbing',           neuropathy: false },
+      { label: 'Burning or hot',              neuropathy: true  },
+      { label: 'Tingling or pins and needles',neuropathy: true  },
+      { label: 'Shooting or electric',        neuropathy: true  }
+    ]
+  },
+
+  /* ---- TRIGGERS ---- */
+  {
+    id: 'triggers',
+    type: 'multi',
+    skipable: false,
+    dimensionTag: 'Your pain',
+    text: 'What tends to make your pain flare up?',
+    options: [
+      { label: 'Sitting or staying still for a long time',                  triggerType: 'physical'  },
+      { label: 'Physical activity or exercise',                             triggerType: 'physical'  },
+      { label: 'Lifting or bending',                                        triggerType: 'physical'  },
+      { label: 'Stress or feeling overwhelmed',                             triggerType: 'nervous'   },
+      { label: 'Poor sleep or being overtired',                             triggerType: 'nervous'   },
+      { label: 'Being emotionally upset or anxious',                        triggerType: 'nervous'   },
+      { label: 'Around my period',                                          triggerType: 'hormonal'  },
+      { label: 'During ovulation',                                          triggerType: 'hormonal'  },
+      { label: 'Perimenopausal changes (e.g. aching joints)',               triggerType: 'hormonal'  },
+      { label: 'During pregnancy',                                          triggerType: 'hormonal'  },
+      { label: 'Postpartum',                                                triggerType: 'hormonal'  }
+    ]
+  },
+
+  /* ---- DIAGNOSIS (ADHD / autism flag) ---- */
+  {
+    id: 'diagnosis',
+    type: 'multi',
+    skipable: true,
+    dimensionTag: 'Your history',
+    text: 'Have you received any of these diagnoses?',
+    options: [
+      { label: 'Disc herniation or prolapse',        adhd: false },
+      { label: 'Spinal stenosis',                    adhd: false },
+      { label: 'Spondylolysis or spondylolisthesis', adhd: false },
+      { label: 'Fibromyalgia',                       adhd: false },
+      { label: 'Endometriosis or adenomyosis',       adhd: false },
+      { label: 'ADHD and / or autism spectrum',      adhd: true  },
+      { label: 'None of these apply',                adhd: false }
+    ]
+  },
+
+  /* ---- NERVOUS SYSTEM ACTIVATION ---- */
+  {
+    id: 'small_tasks',
+    type: 'scored',
+    dimensions: ['nervous'],
+    dimensionTag: 'Nervous system',
+    text: 'Do you ever get pain after small, everyday movements — like getting up from a chair, or carrying something light?',
+    options: [
+      { label: 'No — only after obvious strain or effort',          nervous: 0 },
+      { label: 'Occasionally, but nothing too significant',         nervous: 1 },
+      { label: 'Sometimes, even with fairly gentle things',         nervous: 2 },
+      { label: 'Yes, even small movements can set it off',          nervous: 3 },
+      { label: 'Yes — almost anything can trigger it',              nervous: 4 }
+    ]
+  },
+  {
+    id: 'switch_off',
+    type: 'scored',
+    dimensions: ['nervous'],
+    dimensionTag: 'Nervous system',
+    text: 'Does your body have trouble switching off, even when you\'re trying to rest?',
+    options: [
+      { label: 'Rarely or never',                                                         nervous: 0 },
+      { label: 'Occasionally',                                                             nervous: 1 },
+      { label: 'Often',                                                                    nervous: 2 },
+      { label: 'Almost always — I\'m not sure I know what it feels like to fully relax', nervous: 3 }
+    ]
+  },
+  {
+    id: 'stress_pain',
+    type: 'scored',
+    dimensions: ['nervous'],
+    dimensionTag: 'Nervous system',
+    text: 'Does stress, anxiety or emotional upset make your pain noticeably worse?',
+    options: [
+      { label: 'Not really',                                              nervous: 0 },
+      { label: 'A little, maybe',                                         nervous: 1 },
+      { label: 'Yes — I notice a clear connection',                       nervous: 2 },
+      { label: 'Definitely — stress almost always shows up in my body',   nervous: 3 }
+    ]
+  },
+
+  /* ---- SENSORY SENSITIVITY ---- */
+  {
+    id: 'sensory',
+    type: 'scored',
+    dimensions: ['sensory'],
+    dimensionTag: 'Sensory sensitivity',
+    text: 'How do you find things like bright lights, loud noises or busy environments?',
+    options: [
+      { label: 'Fine — they don\'t really affect me',                                      sensory: 0 },
+      { label: 'A little noticeable — I\'m aware of them but I manage',                   sensory: 1 },
+      { label: 'Quite draining — I find them hard to cope with',                          sensory: 2 },
+      { label: 'Really overwhelming — I actively avoid certain places or situations',      sensory: 4 }
+    ]
+  },
+
+  /* ---- HORMONAL ---- */
+  {
+    id: 'life_stage',
+    type: 'info',
+    dimensionTag: 'Hormonal',
+    text: 'Which best describes where you are right now hormonally?',
+    options: [
+      { label: 'Cycling regularly' },
+      { label: 'Perimenopause' },
+      { label: 'Menopause or postmenopause' },
+      { label: 'Pregnant or postpartum' },
+      { label: 'Not sure / other' }
+    ]
+  },
+  {
+    id: 'hormonal',
+    type: 'scored',
+    dimensions: ['hormonal'],
+    dimensionTag: 'Hormonal influence',
+    text: 'How much does your pain fluctuate in line with hormonal changes — your cycle, perimenopause symptoms, or postpartum shifts?',
+    options: [
+      { label: 'I don\'t notice a hormonal connection',                              hormonal: 0 },
+      { label: 'Maybe a little, but I\'m not sure',                                  hormonal: 1 },
+      { label: 'Yes — certain times in my cycle or phase are clearly worse',         hormonal: 3 },
+      { label: 'It\'s one of the strongest patterns I notice',                       hormonal: 4 }
+    ]
+  },
+
+  /* ---- SLEEP & RECOVERY ---- */
+  {
+    id: 'sleep',
+    type: 'scored',
+    dimensions: ['lifestyle', 'nervous'],
+    dimensionTag: 'Recovery',
+    text: 'How often does pain disrupt your sleep?',
+    options: [
+      { label: 'Rarely or never',      lifestyle: 0, nervous: 0 },
+      { label: 'Occasionally',         lifestyle: 1, nervous: 1 },
+      { label: 'A few nights a week',  lifestyle: 2, nervous: 2 },
+      { label: 'Most nights',          lifestyle: 3, nervous: 3 },
+      { label: 'Every night',          lifestyle: 4, nervous: 4 }
+    ]
+  },
+  {
+    id: 'sleep_hours',
+    type: 'scored',
+    dimensions: ['lifestyle'],
+    dimensionTag: 'Recovery',
+    text: 'On average, how many hours of sleep do you get each night?',
+    options: [
+      { label: 'Under 5 hours', lifestyle: 3 },
+      { label: '5–6 hours',     lifestyle: 2 },
+      { label: '6–7 hours',     lifestyle: 1 },
+      { label: '7–8 hours',     lifestyle: 0 },
+      { label: '8+ hours',      lifestyle: 0 }
+    ]
+  },
+  {
+    id: 'rest',
+    type: 'scored',
+    dimensions: ['lifestyle'],
+    dimensionTag: 'Recovery',
+    text: 'When you take time to rest, do you actually feel restored?',
+    options: [
+      { label: 'Yes — rest genuinely helps me recover',                lifestyle: 0 },
+      { label: 'Sometimes, but not consistently',                       lifestyle: 1 },
+      { label: 'Rarely — I still feel tired or sore after resting',    lifestyle: 2 },
+      { label: 'Almost never — rest doesn\'t seem to touch it',        lifestyle: 3 }
+    ]
+  },
+
+  /* ---- LIFESTYLE & LOAD ---- */
+  {
+    id: 'activity_type',
+    type: 'info',
+    dimensionTag: 'Life demands',
+    text: 'How would you describe how you mostly spend your day?',
+    options: [
+      { label: 'Mostly desk-based or seated' },
+      { label: 'On my feet most of the day' },
+      { label: 'Physically demanding (lifting, manual work)' },
+      { label: 'Caregiving — children, family or others' },
+      { label: 'A real mix of all of the above' }
+    ]
+  },
+  {
+    id: 'load',
+    type: 'scored',
+    dimensions: ['lifestyle', 'nervous'],
+    dimensionTag: 'Life demands',
+    text: 'How much does the physical demand of your day add to your pain or leave your body feeling depleted?',
+    options: [
+      { label: 'It doesn\'t really — I\'ve found a balance that works',                   lifestyle: 0, nervous: 0 },
+      { label: 'A little — some days are harder than others',                              lifestyle: 1, nervous: 0 },
+      { label: 'Quite a bit — I can feel it in my body by the end of most days',          lifestyle: 2, nervous: 1 },
+      { label: 'A lot — my daily demands are a significant driver of my pain',            lifestyle: 3, nervous: 2 }
+    ]
+  },
+
+  /* ---- FATIGUE & NS STATE (new questions) ---- */
+  {
+    id: 'fatigue',
+    type: 'scored',
+    dimensions: ['nervous'],
+    dimensionTag: 'Nervous system',
+    text: 'How would you describe your energy levels most of the time?',
+    options: [
+      { label: 'Good — I feel fairly energised and able to do what I want',            nervous: 0 },
+      { label: 'Okay — but I\'m tiring more easily than I used to',                    nervous: 1 },
+      { label: 'Low — I feel drained a lot, even when I haven\'t done much',           nervous: 2 },
+      { label: 'Very low — exhausted most of the time, even after rest',               nervous: 3 }
+    ]
+  },
+  {
+    id: 'ns_state',
+    type: 'scored',
+    dimensions: ['nervous'],
+    nsStateFlag: true,
+    dimensionTag: 'Nervous system',
+    text: 'When you\'re struggling most with your pain, which feels more like you?',
+    options: [
+      { label: 'Anxious or on edge — I struggle to find a sense of calm',              nervous: 2, nsState: 'hyper'     },
+      { label: 'Flat, numb or shut down — generally dissociated from myself',          nervous: 2, nsState: 'freeze'    },
+      { label: 'I move between both',                                                  nervous: 3, nsState: 'both'      },
+      { label: 'Neither — I generally feel fairly balanced, even in pain',             nervous: 0, nsState: 'regulated' }
+    ]
+  },
+
+  /* ---- IDENTITY STATEMENTS ---- */
+  {
+    id: 'identity1',
+    type: 'scored',
+    dimensions: ['nervous', 'impact'],
+    dimensionTag: 'Life demands',
+    text: '"I can\'t afford to have a bad pain day today." How much do you identify with this?',
+    options: [
+      { label: 'Not at all',                              nervous: 0, impact: 0 },
+      { label: 'Occasionally',                            nervous: 1, impact: 1 },
+      { label: 'Often',                                   nervous: 2, impact: 2 },
+      { label: 'Most of the time',                        nervous: 3, impact: 3 },
+      { label: 'This is basically my life right now',     nervous: 4, impact: 4 }
+    ]
+  },
+  {
+    id: 'identity2',
+    type: 'scored',
+    dimensions: ['lifestyle'],
+    dimensionTag: 'Life demands',
+    text: '"Day to day, I feel stressed or overwhelmed by everything on my plate." How much do you identify with this?',
+    options: [
+      { label: 'Not at all',                                               lifestyle: 0 },
+      { label: 'Occasionally',                                             lifestyle: 1 },
+      { label: 'Often',                                                    lifestyle: 2 },
+      { label: 'Most of the time',                                         lifestyle: 3 },
+      { label: 'This is basically how things are right now',              lifestyle: 4 }
+    ]
+  },
+  {
+    id: 'identity3',
+    type: 'scored',
+    dimensions: ['impact'],
+    dimensionTag: 'Life demands',
+    text: '"I feel like I\'m managing my life around my pain, rather than living it." How much do you identify with this?',
+    options: [
+      { label: 'Not at all',                                     impact: 0 },
+      { label: 'A little',                                       impact: 1 },
+      { label: 'Somewhat',                                       impact: 2 },
+      { label: 'Strongly',                                       impact: 3 },
+      { label: 'Completely — this is exactly how it feels',     impact: 4 }
+    ]
+  }
+];
+
+/* ============================================================
+   RESULT COPY — placeholder text in Katie's voice.
+   Low 0–40%, Mid 41–70%, High 71–100%.
+   These are intentionally placeholders for Katie to edit.
+   ============================================================ */
+const RESULT_COPY = {
+  nervous: {
+    low: "Your nervous system doesn't appear to be in a sensitised state right now which is a really positive sign — we'll be covering a range of nervous system techniques in the course to help keep that balance as you navigate your pain journey.",
+    mid: "There are signs your nervous system is starting to become sensitised and amplify pain signals which can mean pain showing up around things that wouldn't normally cause it, and difficulty finding a sense of balance and rest. We're going to learn how to de-sensitise it using simple neuroscience techniques over the next few days.",
+    high: "Your nervous system looks like it's become over-sensitised, which means it's working overtime and is more reactive than usual. We're going to learn how to de-sensitise it using simple neuroscience techniques over the next few days."
+  },
+  nervous_adhd: {
+    low: "Your nervous system doesn't appear to be in a sensitised state right now which is a really positive sign. Having ADHD or Autism means working with a baseline that is more attuned than most. We'll be covering a range of nervous system techniques to help keep that balance.",
+    mid: "There are signs your nervous system is starting to become sensitised and amplify pain signals which can mean pain showing up around things that wouldn't normally cause it, and difficulty finding a sense of balance and rest. Having ADHD or Autism means working with a baseline that is more attuned than most so we'll be covering a range of nervous system techniques to help restore that balance.",
+    high: "Your nervous system looks like it's become over-sensitised, which means it's working overtime and is more reactive than usual. Having ADHD or Autism means working with a baseline that is more attuned than most, and the additional load from chronic pain can take a toll. We'll be covering a range of nervous system techniques to help restore that balance."
+  },
+  sensory: {
+    low: "Lights, sounds and busy environments don't appear to be a key trigger for you and your sensory system seems to be coping well.",
+    mid: "You're noticing some extra sensitivity — things might feel louder, brighter or more draining than you'd expect. This is a signal that your sensory system is working a little harder, which is something to consider when we look at your pain triggers on the course.",
+    high: "Everyday sensory input is adding additional strain to your nervous system and processing. Processing becomes harder for you in these environments and it's important to consider when we look at your pain triggers on the course."
+  },
+  hormonal: {
+    low: "Hormonal shifts don't seem to be a significant factor in your pain picture right now.",
+    mid: "There's a hormonal thread running through your pain pattern — something to pay attention to when we start mapping your triggers on the course.",
+    high: "Your hormones look like a significant driver and are contributing to your overall pain picture. We'll be covering the link between hormones and pain on the course and also coming up with strategies to approach the harder days."
+  },
+  lifestyle: {
+    low: "The demands of your daily life don't appear to be adding significant load to your body right now.",
+    mid: "The load of daily life is influencing your pain picture. We'll look at ways to bring that down throughout the course.",
+    high: "The demands on you day to day are high and your body is feeling it. We'll look at practical ways to reduce your overall load as we work through the course."
+  },
+  impact: {
+    low: "Pain doesn't appear to be dominating your decisions or daily life right now.",
+    mid: "Your pain is starting to shape your choices and impact your life. This is one of the main things we'll cover in the course by building a toolkit of strategies to use when you need them.",
+    high: "Your pain is really affecting your daily decisions and impacting your life right now. There will be lots of support for this over the next 5 days - and you'll have a toolkit of strategies to use when you need them."
+  }
+};
+
+/* Sub-score copy — NSA deep-dive */
+const NSA_SUB_COPY = {
+  pain_amplification: {
+    low:  "Your nervous system doesn't appear to be significantly amplifying pain signals right now.",
+    mid:  "There are signs your nervous system is starting to amplify pain but we can use simple neuroscience techniques to recalibrate it.",
+    high: "Your nervous system is turning up the volume on pain signals but we can use simple neuroscience techniques to recalibrate it."
+  },
+  dysregulation: {
+    low:  "Your system appears to have good capacity to settle and regulate.",
+    mid:  "You're finding it difficult to switch off and recover and your system is working harder than it needs to.",
+    high: "Your system is struggling to settle and switch off. Without restorative rest and recovery you're more likely to feel fatigue, as your body tries to conserve energy."
+  },
+  life_load: {
+    low:  "Your daily demands don't appear to be adding significant strain to your nervous system right now.",
+    mid:  "The pressures of daily life can cause a state of background vigilance that puts extra strain on your nervous system.",
+    high: "Carrying the constant pressure of managing life around your pain is adding real strain to your system. Something to keep in mind when we look at trigger mapping in the course."
+  }
+};
+
+/* Sub-score copy — L&L deep-dive */
+const LL_SUB_COPY = {
+  sleep: {
+    low:  "Sleep doesn't appear to be significantly draining your body budget and it looks like you're getting time to restore.",
+    mid:  "Sleep debt can put extra strain on your body, especially when you're dealing with pain. We're going to look at ways to help your nervous system switch off at night to get more restorative sleep.",
+    high: "Consistently not getting enough sleep means your body budget isn't getting the chance to restore between days. We're going to look at ways to help your nervous system switch off at night to get more restorative sleep."
+  },
+  recovery: {
+    low:  "It seems like you're resting well right now and your body is recovering when it needs.",
+    mid:  "Rest is helping sometimes, but isn't consistently restoring you. We're going to look at techniques to help with that.",
+    high: "Rest isn't doing what it should for you right now and when you stop, your system isn't recovering. We're going to look at techniques to help with that."
+  },
+  physical: {
+    low:  "The physical demands of your day don't appear to be significantly adding to your pain.",
+    mid:  "The physical load of your day appears to be contributing to your pain picture. We'll look at ways to manage this on the course whilst still getting what you need to done!",
+    high: "Your daily physical demands are a significant driver and your body is struggling to keep up and recover. We'll address this when we start trigger mapping and also look at ways to manage physical load throughout the day."
+  },
+  identity: {
+    low:  "Stress and overwhelm don't appear to be a major driver for you right now.",
+    mid:  "Feeling stressed and overwhelmed is adding to what your system is carrying. It's completely normal to feel this way when you're dealing with pain and it's why we're doing the course!",
+    high: "High levels of day-to-day stress are adding significant load to your nervous system. It's completely normal to feel overwhelmed when dealing with pain and it's why I'm here to support you on this course."
+  }
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let current = 0;
+const answers = {};
+
+/* ============================================================
+   ELEMENTS
+   ============================================================ */
+const introScreen   = document.getElementById('intro-screen');
+const quizScreen    = document.getElementById('quiz-screen');
+const resultsScreen = document.getElementById('results-screen');
+const progressFill  = document.getElementById('progress-fill');
+const dimensionTag  = document.getElementById('dimension-tag');
+const questionText  = document.getElementById('question-text');
+const optionsEl     = document.getElementById('options');
+const multiHint     = document.getElementById('multi-hint');
+const backBtn       = document.getElementById('back-btn');
+const skipBtn       = document.getElementById('skip-btn');
+const nextBtn       = document.getElementById('next-btn');
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+document.getElementById('start-btn').addEventListener('click', () => {
+  introScreen.hidden = true;
+  quizScreen.hidden  = false;
+  document.getElementById('brand-header').hidden = false;
+  renderQuestion();
+});
+
+backBtn.addEventListener('click', () => {
+  if (current === 0) {
+    quizScreen.hidden  = true;
+    introScreen.hidden = false;
+  } else {
+    current--;
+    renderQuestion();
+  }
+});
+
+skipBtn.addEventListener('click', () => {
+  // For skipable questions, record no answer and move on
+  answers[QUESTIONS[current].id] = [];
+  current++;
+  if (current >= QUESTIONS.length) {
+    quizScreen.hidden = true;
+    showResults();
+  } else {
+    renderQuestion();
+  }
+});
+
+nextBtn.addEventListener('click', () => {
+  if (current === QUESTIONS.length - 1) {
+    quizScreen.hidden = true;
+    showResults();
+  } else {
+    current++;
+    renderQuestion();
+  }
+});
+
+/* ============================================================
+   DEMO MODE — pre-fill answers for results preview
+   ============================================================ */
+function fillDemoAnswers() {
+  // location — lower back + sacral (multi)
+  answers['location']      = [0, 1];
+  // duration — years (index 4)
+  answers['duration']      = 4;
+  // severity — limiting enjoyment (index 3)
+  answers['severity']      = 3;
+  // variability — pretty unpredictable (index 3)
+  answers['variability']   = 3;
+  // quality — aching, tight, burning (multi, neuropathy flag on burning)
+  answers['quality']       = [0, 1, 3];
+  // triggers — sitting, stress, sleep, hormonal (multi)
+  answers['triggers']      = [0, 3, 4, 6, 7];
+  // diagnosis — none (multi)
+  answers['diagnosis']     = [6];
+  // small_tasks — small things can set it off (index 3)
+  answers['small_tasks']   = 3;
+  // switch_off — often (index 2)
+  answers['switch_off']    = 2;
+  // stress_pain — clear connection (index 2)
+  answers['stress_pain']   = 2;
+  // sensory — more draining (index 2)
+  answers['sensory']       = 2;
+  // life_stage — cycling regularly (index 0)
+  answers['life_stage']    = 0;
+  // hormonal — certain times clearly worse (index 2)
+  answers['hormonal']      = 2;
+  // sleep — a few nights a week (index 2)
+  answers['sleep']         = 2;
+  // sleep_hours — 6–7 hours (index 2)
+  answers['sleep_hours']   = 2;
+  // rest — rarely restorative (index 2)
+  answers['rest']          = 2;
+  // activity_type — mostly desk-based (index 0)
+  answers['activity_type'] = 0;
+  // load — quite a bit (index 2)
+  answers['load']          = 2;
+  // fatigue — feel drained a lot (index 2)
+  answers['fatigue']       = 2;
+  // ns_state — anxious/on edge (index 0)
+  answers['ns_state']      = 0;
+  // identity1 — often (index 2)
+  answers['identity1']     = 2;
+  // identity2 — stressed/overwhelmed often (index 2)
+  answers['identity2']     = 2;
+  // identity3 — strongly (index 3)
+  answers['identity3']     = 3;
+}
+
+document.getElementById('preview-btn').addEventListener('click', () => {
+  fillDemoAnswers();
+  introScreen.hidden = true;
+  document.getElementById('brand-header').hidden = false;
+  showResults();
+});
+
+/* ============================================================
+   RENDER QUESTION
+   ============================================================ */
+function renderQuestion() {
+  const q = QUESTIONS[current];
+
+  progressFill.style.width = (current / QUESTIONS.length * 100) + '%';
+  dimensionTag.textContent  = q.dimensionTag;
+  questionText.textContent  = q.text;
+
+  optionsEl.innerHTML = '';
+  multiHint.hidden    = true;
+  skipBtn.hidden      = true;
+
+  if (q.type === 'text') {
+    /* ----- Text input (name) ----- */
+    const inp = document.createElement('input');
+    inp.type        = 'text';
+    inp.className   = 'name-input';
+    inp.placeholder = q.placeholder || '';
+    inp.value       = answers[q.id] || '';
+    inp.addEventListener('input', () => {
+      answers[q.id] = inp.value.trim();
+      nextBtn.disabled = !answers[q.id];
+    });
+    optionsEl.appendChild(inp);
+    nextBtn.disabled = !answers[q.id];
+    setTimeout(() => inp.focus(), 50);
+
+  } else if (q.type === 'multi') {
+    /* ----- Multi-select ----- */
+    multiHint.hidden = false;
+    if (q.skipable) skipBtn.hidden = false;
+
+    const selected = answers[q.id] || [];
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className   = 'option multi' + (selected.includes(i) ? ' selected' : '');
+      btn.textContent = opt.label;
+      btn.addEventListener('click', () => {
+        const cur = answers[q.id] || [];
+        answers[q.id] = cur.includes(i) ? cur.filter(x => x !== i) : [...cur, i];
+        renderQuestion();
+      });
+      optionsEl.appendChild(btn);
+    });
+
+    nextBtn.disabled = q.skipable ? false : (answers[q.id] || []).length === 0;
+
+  } else {
+    /* ----- Single select (info / scored) ----- */
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className   = 'option' + (answers[q.id] === i ? ' selected' : '');
+      btn.textContent = opt.label;
+      btn.addEventListener('click', () => {
+        answers[q.id] = i;
+        renderQuestion();
+      });
+      optionsEl.appendChild(btn);
+    });
+    nextBtn.disabled = answers[q.id] === undefined;
+  }
+
+  backBtn.textContent = current === 0 ? 'Back to intro' : 'Back';
+  nextBtn.textContent = current === QUESTIONS.length - 1 ? 'See my results →' : 'Next';
+}
+
+/* ============================================================
+   SCORING
+   ============================================================ */
+function computeScores() {
+  const totals = { chronicity: 0, nervous: 0, sensory: 0, hormonal: 0, lifestyle: 0, impact: 0 };
+
+  QUESTIONS.forEach(q => {
+    if (q.type !== 'scored') return;
+    const ans = answers[q.id];
+    if (ans === undefined) return;
+    const opt = q.options[ans];
+    (q.dimensions || []).forEach(dim => {
+      totals[dim] += (opt[dim] || 0);
+    });
+  });
+
+  const pct = {};
+  Object.keys(DIMENSIONS).forEach(d => {
+    pct[d] = Math.min(100, Math.round((totals[d] / DIMENSIONS[d].max) * 100));
+  });
+
+  return { totals, pct };
+}
+
+function tier(p) {
+  if (p <= 40) return 'low';
+  if (p <= 70) return 'mid';
+  return 'high';
+}
+
+function tierLabel(p) {
+  const t = tier(p);
+  return t === 'low' ? 'Low' : t === 'mid' ? 'Moderate' : 'High';
+}
+
+/* NSA sub-scores */
+function computeNSASubScores() {
+  const get = (id, dim) => {
+    const q   = QUESTIONS.find(q => q.id === id);
+    const ans = answers[id];
+    if (!q || ans === undefined) return 0;
+    return q.options[ans][dim] || 0;
+  };
+
+  const painAmp  = get('small_tasks','nervous') + get('stress_pain','nervous');
+  const dysreg   = get('switch_off','nervous')  + get('fatigue','nervous');
+  const lifeLoad = get('identity1','nervous')   + get('load','nervous');
+
+  return {
+    pain_amplification: { score: painAmp,  max: 7 },
+    dysregulation:      { score: dysreg,   max: 6 },
+    life_load:          { score: lifeLoad, max: 6 }
+  };
+}
+
+/* L&L sub-scores */
+function computeLLSubScores() {
+  const get = (id, dim) => {
+    const q   = QUESTIONS.find(q => q.id === id);
+    const ans = answers[id];
+    if (!q || ans === undefined) return 0;
+    return q.options[ans][dim] || 0;
+  };
+
+  const sleepScore    = get('sleep','lifestyle')     + get('sleep_hours','lifestyle');
+  const recoveryScore = get('rest','lifestyle');
+  const physicalScore = get('load','lifestyle');
+  const identityScore = get('identity2','lifestyle'); // stress/overwhelm question — lifestyle load only
+
+  return {
+    sleep:    { score: sleepScore,    max: 7 },
+    recovery: { score: recoveryScore, max: 3 },
+    physical: { score: physicalScore, max: 3 },
+    identity: { score: identityScore, max: 4 }
+  };
+}
+
+/* ============================================================
+   SNAPSHOT TILE HELPERS
+   ============================================================ */
+const TILE_STYLES = {
+  nervous:   { bg: '#f0e4a0', labelCol: '#7a6010', valCol: '#5a4808', subCol: '#8a7020', trackBg: '#e8d870', fillBg: '#c9a830', label: 'Nervous system' },
+  sensory:   { bg: '#c8d8b8', labelCol: '#3a5030', valCol: '#2a4020', subCol: '#506040', trackBg: '#b8c4b0', fillBg: '#72796a', label: 'Sensory sensitivity' },
+  hormonal:  { bg: '#ead5d0', labelCol: '#8a4858', valCol: '#6a3048', subCol: '#9a6070', trackBg: '#dcc0bc', fillBg: '#c9a0a0', label: 'Hormonal influence' },
+  lifestyle: { bg: '#e8e2d4', labelCol: '#7a6a50', valCol: '#5a4a30', subCol: '#8a7a60', trackBg: '#d4cbb8', fillBg: '#a89878', label: 'Lifestyle load' },
+  impact:    { bg: '#ddc4b0', labelCol: '#6a4030', valCol: '#4a2818', subCol: '#7a5040', trackBg: '#c8a888', fillBg: '#a07050', label: 'Pain impact' }
+};
+
+function snapshotTile(dim, pct) {
+  const s = TILE_STYLES[dim];
+  const p = pct[dim] || 0;
+  const t = tierLabel(p);
+  return `<div style="background:${s.bg};border-radius:14px;padding:16px 14px">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${s.labelCol};margin-bottom:8px">${s.label}</div>
+    <span style="font-size:20px;font-weight:700;color:${s.valCol};display:block;margin-bottom:2px;line-height:1.1">${p}%</span>
+    <div style="font-size:11px;color:${s.subCol};margin-bottom:10px">${t}</div>
+    <div style="height:6px;border-radius:999px;background:${s.trackBg};overflow:hidden"><div style="height:100%;border-radius:999px;background:${s.fillBg};width:${p}%"></div></div>
+  </div>`;
+}
+
+function triggerTile(topTrigger, triggerCounts) {
+  const triggerNames = { physical: 'Physical', nervous: 'Nervous system', hormonal: 'Hormonal' };
+  const triggerSubs  = { physical: 'Movement & load', nervous: 'Stress & sleep', hormonal: 'Cycle & hormones' };
+  const type = topTrigger ? topTrigger[0] : null;
+  const label = type ? triggerNames[type] : 'No triggers';
+  const sub   = type ? triggerSubs[type] : 'None selected';
+  return `<div style="background:#f5dfc0;border-radius:14px;padding:16px 14px">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9a5820;margin-bottom:8px">Main triggers</div>
+    <span style="font-size:18px;font-weight:700;color:#7a3e10;display:block;margin-bottom:2px;line-height:1.2">${label}</span>
+    <div style="font-size:11px;color:#b07040">${sub}</div>
+  </div>`;
+}
+
+/* ============================================================
+   SHOW RESULTS
+   ============================================================ */
+function showResults() {
+  const { pct } = computeScores();
+
+  /* Personalisation extracts */
+  const qFind = id => QUESTIONS.find(q => q.id === id);
+
+  // TODO: replace with Kajabi first name merge tag when embedded
+  const firstName    = 'you';
+
+  const locationAnswers = answers['location'] || [];
+  const location = locationAnswers.length > 0
+    ? locationAnswers.map(i => qFind('location').options[i].label).join(', ')
+    : null;
+
+  const lifeStageIdx = answers['life_stage'];
+  const lifeStage    = lifeStageIdx !== undefined ? qFind('life_stage').options[lifeStageIdx].label : null;
+
+  const activityIdx  = answers['activity_type'];
+  const activityType = activityIdx !== undefined ? qFind('activity_type').options[activityIdx].label.toLowerCase() : null;
+
+  /* NS state */
+  const nsStateAns = answers['ns_state'];
+  const nsState    = nsStateAns !== undefined ? qFind('ns_state').options[nsStateAns].nsState : 'regulated';
+
+  /* ADHD flag */
+  const diagAnswers = answers['diagnosis'] || [];
+  const hasAdhd     = diagAnswers.some(i => qFind('diagnosis').options[i].adhd);
+
+  /* Neuropathy flag */
+  const qualityAnswers = answers['quality'] || [];
+  const hasNeuropathy  = qualityAnswers.some(i => qFind('quality').options[i].neuropathy);
+
+  /* Trigger counts */
+  const triggerAnswers = answers['triggers'] || [];
+  const triggerCounts  = { physical: 0, nervous: 0, hormonal: 0 };
+  triggerAnswers.forEach(i => {
+    const tt = qFind('triggers').options[i].triggerType;
+    if (tt) triggerCounts[tt]++;
+  });
+
+  /* Sleep hours label */
+  const sleepHoursIdx   = answers['sleep_hours'];
+  const sleepHoursLabel = sleepHoursIdx !== undefined ? qFind('sleep_hours').options[sleepHoursIdx].label : '—';
+
+  /* Sleep disruption label */
+  const sleepIdx   = answers['sleep'];
+  const sleepLabel = sleepIdx !== undefined ? qFind('sleep').options[sleepIdx].label.toLowerCase() : '—';
+
+  /* Rest label */
+  const restIdx   = answers['rest'];
+  const restLabel = restIdx !== undefined ? qFind('rest').options[restIdx].label : '—';
+
+  /* Identity scores for echo */
+  const id1Idx = answers['identity1'];
+  const id2Idx = answers['identity2'];
+  const id3Idx = answers['identity3'];
+  const id1Score = id1Idx !== undefined ? qFind('identity1').options[id1Idx].lifestyle : 0;
+  const id2Score = id2Idx !== undefined ? qFind('identity2').options[id2Idx].lifestyle : 0;
+  const id3Score = id3Idx !== undefined ? qFind('identity3').options[id3Idx].lifestyle : 0;
+  const identityTotal = id1Score + id2Score + id3Score;
+
+  /* Sub-scores */
+  const nsaSub = computeNSASubScores();
+  const llSub  = computeLLSubScores();
+
+  /* Choose NSA copy (ADHD-aware) */
+  const nervousCopy = hasAdhd ? RESULT_COPY.nervous_adhd : RESULT_COPY.nervous;
+
+  /* Chronicity verdict */
+  const chronPct = pct.chronicity;
+  let chronVerdict, chronSub;
+  if (chronPct <= 40) {
+    chronVerdict = 'Acute';
+    chronSub = 'Your pain is relatively new so we have early intervention on our side.';
+  } else if (chronPct <= 80) {
+    chronVerdict = 'Established chronic';
+    chronSub = 'Your pain has been going on long enough for your nervous system to become involved.';
+  } else {
+    chronVerdict = 'Long-standing chronic';
+    chronSub = 'Pain has been part of your life for some time — but patterns can still shift.';
+  }
+
+  /* WoT signals */
+  const wotSignals = [];
+  const switchOffAns = answers['switch_off'];
+  if (switchOffAns !== undefined && switchOffAns >= 2) {
+    wotSignals.push({ type: 'hyper', text: 'Difficulty switching off — your system stays activated even when you\'re trying to rest.' });
+  }
+  const stressAns = answers['stress_pain'];
+  if (stressAns !== undefined && stressAns >= 2) {
+    wotSignals.push({ type: 'hyper', text: 'Stress and emotions showing up in your body — a sign your nervous system is operating in a heightened state.' });
+  }
+  const smallTaskAns = answers['small_tasks'];
+  if (smallTaskAns !== undefined && smallTaskAns >= 2) {
+    wotSignals.push({ type: 'hyper', text: 'Pain triggered by small movements — your system is treating low-level input as a threat.' });
+  }
+  if (nsState === 'freeze' || nsState === 'both') {
+    wotSignals.push({ type: 'freeze', text: 'Flat, numb or shut-down feelings — your nervous system has learned to conserve by moving into a freeze response.' });
+  }
+  const fatigueAns = answers['fatigue'];
+  if (fatigueAns !== undefined && fatigueAns >= 2) {
+    wotSignals.push({ type: 'freeze', text: 'Persistent low energy that doesn\'t respond to rest — a sign of system overload and energy conservation.' });
+  }
+
+  /* Positive (calm) signals */
+  if (switchOffAns !== undefined && switchOffAns <= 1) {
+    wotSignals.push({ type: 'calm', text: 'You\'re able to switch off and settle — your nervous system has some capacity to come out of an activated state.' });
+  }
+  const restAns = answers['rest'];
+  if (restAns !== undefined && restAns === 0) {
+    wotSignals.push({ type: 'calm', text: 'Rest feels restorative for you — a sign your body has capacity to recover and make deposits back into the budget.' });
+  }
+
+  /* Identity echo copy */
+  let identityEcho = '';
+  if (identityTotal >= 9) {
+    identityEcho = `The three statements you just rated — the cost of a bad day, the things you're saying no to, the sense of managing life rather than living it — are painting a really clear picture. Pain has quietly taken the steering wheel, and the course is built to help you take it back, one piece at a time.`;
+  } else if (identityTotal >= 5) {
+    identityEcho = `Some of those identity statements landed for you, which tells me this isn't just about the physical sensation of pain — it's starting to shape your choices too. That's worth paying attention to, and it's exactly why the course goes beyond just the body.`;
+  } else {
+    identityEcho = `Right now, pain doesn't appear to be significantly driving your decisions day to day. That's genuinely good — it means the course can work on the pain itself without first having to untangle the identity piece.`;
+  }
+
+  /* Summary copy */
+  const topDims = ['nervous','sensory','hormonal','lifestyle']
+    .sort((a,b) => pct[b] - pct[a]);
+  const topLabel = DIMENSIONS[topDims[0]].label;
+  const secondLabel = DIMENSIONS[topDims[1]].label;
+
+  // Trigger personalisation
+  const topTriggerType = triggerCounts.nervous >= triggerCounts.physical && triggerCounts.nervous >= triggerCounts.hormonal
+    ? 'nervous' : triggerCounts.physical >= triggerCounts.hormonal ? 'physical' : 'hormonal';
+
+  const triggerSentence = topTriggerType === 'nervous'
+    ? `Your trigger picture shows a strong nervous system thread — stress, sleep, emotional load. Day 2 is dedicated to mapping these precisely with a trigger tracker framework, so you can start to see the patterns and interrupt them before they build into a flare.`
+    : topTriggerType === 'physical'
+    ? `Physical and movement-based triggers are prominent in your profile. As well as understanding the nervous system piece, Day 3 gives you a full release toolkit — gentle, sustained techniques that work directly with your nervous system rather than just pushing through the tissue.`
+    : `Hormonal triggers are part of your picture. Day 4 goes into this in depth — how prostaglandins, ovulation laxity and perimenopause changes all show up in the back and pelvis, and what to actually do about each one.`;
+
+  const secondDim = topDims[1];
+  const secondDriverSentence = secondDim === 'lifestyle'
+    ? `Your life demands are part of the load — and Day 5 is specifically about working with that rather than against it. We build your toolkit into the rhythms you already have, so it holds up in real life, not just when everything is calm.`
+    : secondDim === 'hormonal'
+    ? `Hormonal influence shows up meaningfully in your profile. Day 4 covers this in depth — including a cycle and pain tracker, symptom mapping across the month, and specific guidance for perimenopause and menopause.`
+    : secondDim === 'sensory'
+    ? `Your sensory sensitivity means your nervous system is already working harder than most to process the world around it. The course includes specific callout content for sensory sensitivity throughout — practical adjustments so the approach works with your system rather than adding to its load.`
+    : ``;
+
+  let summaryCopy = `We start with the nervous system — and that holds true for every profile, regardless of where you scored. Even when it isn't your highest driver, it's the foundation everything else sits on. It determines how loudly your pain signals fire, how much you can carry before a flare, and how quickly you recover. Day 1 unpacks why your pain has stayed around — the science of central sensitisation, neuroplasticity and the pain system that most people are never told. By Day 2, you'll have your first practical tools for turning the volume down.
+
+${triggerSentence}
+
+${secondDriverSentence}
+
+Day 5 brings it all together — building everything you've learned into a long-term toolkit that fits your actual life. The goal isn't a perfect routine. It's understanding your pain clearly enough to start changing it, and making the shift from someone who is managing their pain to someone who knows how to move through it.`;
+
+  if (hasAdhd) {
+    summaryCopy += `\n\nOne more thing worth naming: with ADHD or autism in the picture, your nervous system has always been more attuned than most. That's not a complication — it's important context. The course works with that rather than treating it as an obstacle.`;
+  }
+
+  /* ============================================================
+     FLAGS
+     ============================================================ */
+  const flags = [];
+
+  if (hasNeuropathy) {
+    flags.push({
+      icon: '⚠',
+      title: 'Nerve-related symptoms flagged',
+      body: 'Some of your answers — burning, tingling or shooting pain — can be associated with nerve involvement. I\'d recommend checking in with your GP or physiotherapist before starting the movement elements of the course, just to rule out anything that needs direct attention first.',
+      emailTrigger: 'neuropathy'
+    });
+  }
+
+  const isPregnantOrPostpartum = lifeStageIdx === 3;
+  if (isPregnantOrPostpartum) {
+    flags.push({
+      icon: '♡',
+      title: 'Pregnant or postpartum',
+      body: 'I recommend consulting your GP and / or working alongside your midwife or postnatal physiotherapist for any movement or exercise elements of the course.',
+      emailTrigger: 'pregnancy'
+    });
+  }
+
+  if (pct.nervous >= 71) {
+    flags.push({
+      icon: '◎',
+      title: 'High nervous system activation — go gently with the exercises',
+      body: 'Your nervous system score suggests central sensitisation may be a significant factor for you. This means your system is already working hard, and too much too soon with movement can backfire. Please start with the gentlest options in each movement section and build up very slowly. The nervous system modules in the course are especially relevant for you.',
+      emailTrigger: 'high_nsa'
+    });
+  }
+
+  if (chronPct > 75) {
+    flags.push({
+      icon: '◷',
+      title: 'Long-standing pain — expect a gradual pace',
+      body: 'Your pain has been present for a long time, which means patterns are well established and change may feel slower at first. That\'s completely normal and doesn\'t mean things aren\'t working. Be patient with the process and remember, small improvements compound over time.',
+      emailTrigger: 'longstanding'
+    });
+  }
+
+  /* ============================================================
+     SNAPSHOT SENTENCE
+     ============================================================ */
+  const driverLabels = {
+    nervous:   'nervous system',
+    sensory:   'sensory sensitivity',
+    hormonal:  'hormones',
+    lifestyle: 'life demands'
+  };
+  const triggerTypeLabels = {
+    physical: 'physical and mechanical',
+    nervous:  'nervous system',
+    hormonal: 'hormonal'
+  };
+
+  const topDrivers = ['nervous','sensory','hormonal','lifestyle']
+    .filter(d => pct[d] >= 40)
+    .sort((a,b) => pct[b] - pct[a])
+    .slice(0, 2);
+
+  const topTrigger = Object.entries(triggerCounts)
+    .filter(([,v]) => v > 0)
+    .sort((a,b) => b[1] - a[1])[0];
+
+  const chronOpener = chronPct <= 40
+    ? "You've been living with pain recently"
+    : chronPct <= 80
+    ? "Your pain has become chronic"
+    : "You've been living with chronic pain";
+
+  let driverClause;
+  if (topDrivers.length >= 2) {
+    driverClause = `your ${driverLabels[topDrivers[0]]} and ${driverLabels[topDrivers[1]]} are key influencing factors`;
+  } else if (topDrivers.length === 1) {
+    driverClause = `your ${driverLabels[topDrivers[0]]} is your biggest influencing factor`;
+  } else {
+    driverClause = `your scores are relatively even across influencing factors`;
+  }
+
+  const snapshotSentence = `${chronOpener}, and ${driverClause}.`;
+
+  /* ============================================================
+     RENDER RESULTS HTML
+     ============================================================ */
+  resultsScreen.innerHTML = `
+
+    <!-- Header -->
+    <div class="card results-section results-header-card">
+      <div class="intro-hero" style="height:180px">
+        <img src="intro-bg.jpg.png" alt="" class="intro-hero-img" style="object-position:center 31%">
+      </div>
+      <div class="intro-brand">
+        <img src="logo.png" alt="Katie Jean" class="intro-logo">
+        <p class="intro-course-label">The 5 Day Back Reset</p>
+      </div>
+      <div class="intro-content" style="padding-bottom:0">
+      <div class="results-intro">
+        <h1>${firstName === 'you' ? 'Your Pain Profile' : `${firstName}'s Pain Profile`}</h1>
+        <p style="font-family:'PT Serif',serif;font-size:18px;font-weight:400;font-style:normal;color:var(--ink);line-height:1.5;margin:0 0 22px;border-left:3px solid var(--button-bg);padding-left:18px">${snapshotSentence}</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px">
+        ${snapshotTile(topDrivers[0] || 'nervous', pct)}
+        ${snapshotTile(topDrivers[1] || 'lifestyle', pct)}
+        ${triggerTile(topTrigger, triggerCounts)}
+      </div>
+      <p class="snapshot-sub">Scroll down to explore each area in more detail. Over the next five days we'll be working through each of these areas using a blend of neuroscience and practical tools.</p>
+      </div><!-- /intro-content -->
+    </div>
+
+    <!-- Chronicity -->
+    <div class="card results-section">
+      <div class="chronicity-panel">
+        <h3>How long has this been going on?</h3>
+        <div class="chron-axis-labels">
+          <span>Acute</span>
+          <span style="text-align:right">Chronic</span>
+        </div>
+        <div class="chron-track-wrap">
+          <div class="chron-track"></div>
+          <div class="chron-divider" style="left:50%"></div>
+          <div class="chron-divider-label" style="left:50%">3 months +</div>
+          <div class="chron-marker" style="left:${chronPct}%"></div>
+          <div class="chron-you-label" style="left:${chronPct}%">You</div>
+        </div>
+        <div class="chron-verdict">
+          <span class="chron-verdict-label">${chronVerdict}</span>
+          <span class="chron-verdict-sub">${chronSub}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Influencing factors radar -->
+    <div class="card results-section radar-section">
+      <h3>What's influencing your pain</h3>
+      <p class="section-intro">The radar below shows how strongly these four key factors appear in your profile.</p>
+      <div class="radar-wrap" id="radar-wrap-result"></div>
+    </div>
+
+    <!-- Factor cards -->
+    <div class="factor-cards">
+      <div class="factor-card blush">
+        <div class="fc-label">Nervous system</div>
+        <div class="fc-pct">${pct.nervous}%</div>
+        <div class="fc-tier">${tierLabel(pct.nervous)}</div>
+        <p class="fc-copy">${nervousCopy[tier(pct.nervous)]}</p>
+      </div>
+      <div class="factor-card sage">
+        <div class="fc-label">Sensory sensitivity</div>
+        <div class="fc-pct">${pct.sensory}%</div>
+        <div class="fc-tier">${tierLabel(pct.sensory)}</div>
+        <p class="fc-copy">${RESULT_COPY.sensory[tier(pct.sensory)]}</p>
+      </div>
+      <div class="factor-card lavender">
+        <div class="fc-label">Hormonal influence</div>
+        <div class="fc-pct">${pct.hormonal}%</div>
+        <div class="fc-tier">${tierLabel(pct.hormonal)}</div>
+        <p class="fc-copy">${RESULT_COPY.hormonal[tier(pct.hormonal)]}</p>
+      </div>
+      <div class="factor-card gold">
+        <div class="fc-label">Lifestyle load</div>
+        <div class="fc-pct">${pct.lifestyle}%</div>
+        <div class="fc-tier">${tierLabel(pct.lifestyle)}</div>
+        <p class="fc-copy">${RESULT_COPY.lifestyle[tier(pct.lifestyle)]}</p>
+      </div>
+      <div class="factor-card" style="background:#ddc4b0;border-left:4px solid #a07050;grid-column:1/-1;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <div class="fc-label" style="color:#6a4030;margin:0">Pain impact</div>
+          <div class="fc-tier" style="color:#7a5040;margin:0">${tierLabel(pct.impact)}</div>
+        </div>
+        <div style="height:8px;border-radius:999px;background:#c8a888;overflow:hidden">
+          <div style="height:100%;border-radius:999px;background:#a07050;width:${pct.impact}%"></div>
+        </div>
+        <p class="fc-copy" style="margin:0">${RESULT_COPY.impact[tier(pct.impact)]}</p>
+      </div>
+    </div>
+
+    <!-- NSA deep-dive -->
+    <div class="deepdive-panel">
+      <h3>Nervous system — closer look</h3>
+      <p class="section-intro">Breaking down where your nervous system score is coming from.</p>
+      <div class="bar-grid">
+        ${barRow('Pain amplification', pctOf(nsaSub.pain_amplification), 'blush', NSA_SUB_COPY.pain_amplification[tier(pctOf(nsaSub.pain_amplification))])}
+        ${barRow('Ability to regulate', pctOf(nsaSub.dysregulation), 'blush', NSA_SUB_COPY.dysregulation[tier(pctOf(nsaSub.dysregulation))])}
+        ${barRow('Life load on NS', pctOf(nsaSub.life_load), 'blush', NSA_SUB_COPY.life_load[tier(pctOf(nsaSub.life_load))])}
+      </div>
+    </div>
+
+    <!-- L&L deep-dive -->
+    <div class="deepdive-panel">
+      <h3>Lifestyle load — closer look</h3>
+      <p class="section-intro">How the different elements of your lifestyle are contributing.</p>
+      <div class="bar-grid">
+        ${barRow('Sleep disruption', pctOf(llSub.sleep), 'forest', LL_SUB_COPY.sleep[tier(pctOf(llSub.sleep))])}
+        ${barRow('Rest quality', pctOf(llSub.recovery), 'forest', LL_SUB_COPY.recovery[tier(pctOf(llSub.recovery))])}
+        ${barRow('Physical demand', pctOf(llSub.physical), 'forest', LL_SUB_COPY.physical[tier(pctOf(llSub.physical))])}
+        ${barRow('Stress / overwhelm', pctOf(llSub.identity), 'forest', LL_SUB_COPY.identity[tier(pctOf(llSub.identity))])}
+      </div>
+    </div>
+
+    <!-- Trigger type split -->
+    <div class="card results-section">
+      <h3 class="section-h3" style="margin-bottom:4px">What's setting your pain off.</h3>
+      <p class="section-intro" style="margin-bottom:16px">Here's how your triggers stack up.</p>
+      ${(()=>{
+        const tq = qFind('triggers');
+        const tAnswers = answers['triggers'] || [];
+        const byType = { physical: [], nervous: [], hormonal: [] };
+        tAnswers.forEach(i => {
+          const opt = tq.options[i];
+          if (opt && opt.triggerType) byType[opt.triggerType].push(opt.label);
+        });
+        function triggerList(labels) {
+          if (labels.length === 0) return '';
+          return `<div class="tb-divider"></div><div class="tb-triggers">${labels.map(l => `<div class="tb-trigger-item">${l}</div>`).join('')}</div>`;
+        }
+        return `
+        <div class="trigger-boxes">
+          <div class="trigger-box physical">
+            <div class="tb-label">Physical<br>demand</div>
+            <span class="tb-count">${triggerCounts.physical}</span>
+            <div class="tb-sub">${triggerCounts.physical === 1 ? 'trigger' : 'triggers'}</div>
+            ${triggerList(byType.physical)}
+          </div>
+          <div class="trigger-box nervous">
+            <div class="tb-label">Nervous<br>system</div>
+            <span class="tb-count">${triggerCounts.nervous}</span>
+            <div class="tb-sub">${triggerCounts.nervous === 1 ? 'trigger' : 'triggers'}</div>
+            ${triggerList(byType.nervous)}
+          </div>
+          <div class="trigger-box hormonal">
+            <div class="tb-label">Hormonal<br>changes</div>
+            <span class="tb-count">${triggerCounts.hormonal}</span>
+            <div class="tb-sub">${triggerCounts.hormonal === 1 ? 'trigger' : 'triggers'}</div>
+            ${triggerList(byType.hormonal)}
+          </div>
+        </div>
+        <p class="trigger-summary">Mapping your triggers is a key part of the course — we'll use this picture to retrain your system so it stops registering these so highly on its threat list.</p>`;
+      })()}
+    </div>
+
+    <!-- Recovery picture -->
+    <div class="recovery-panel">
+      <h3>Your body budget</h3>
+      <p class="section-intro">Your brain is constantly managing your body's physical resources — glucose, oxygen, hormones — like a bank account. Sleep, rest, and nourishment are deposits. Stress, exertion, and illness are withdrawals. Chronic pain is a significant extra drain on that account and can run your budget into deficit. When the budget is depleted, your nervous system can become mis-calibrated and start amplifying pain signals even without new tissue damage. Restorative rest and recovery are how you start making deposits again. In the course, we'll look at the most effective ways to protect your body budget and build it back up when you need to.</p>
+      <div class="bc-rows">${(()=>{
+        /* ---- Sleep hours row ---- */
+        const shIdx = sleepHoursIdx ?? 2;
+        const shSegs = [0,1,2,3,4].map(i => {
+          const cls = i !== shIdx ? '' : shIdx <= 1 ? 'seg-low' : shIdx === 2 ? 'seg-mid' : 'seg-good';
+          return `<div class="bc-seg ${cls}"></div>`;
+        }).join('');
+        const shNote = shIdx <= 1
+          ? "You're getting significantly less sleep than recommended — this makes it much harder for your body to recover from pain."
+          : shIdx === 2
+          ? "Just below the recommended range — an extra 30–60 minutes could make a real difference to your budget."
+          : "You're hitting the recommended sleep range, which gives your body a good chance to make overnight deposits.";
+
+        /* ---- Sleep disruption row ---- */
+        const sdIdx = sleepIdx === 'rarely or never' ? 0 : sleepLabel === 'occasionally' ? 1 : sleepLabel === 'a few nights a week' ? 2 : sleepLabel === 'most nights' ? 3 : 4;
+        const sdIdxNum = answers['sleep'] ?? 2;
+        const sdSegs = [0,1,2,3,4].map(i => {
+          const cls = i !== sdIdxNum ? '' : sdIdxNum <= 1 ? 'seg-good' : sdIdxNum === 2 ? 'seg-mid' : 'seg-low';
+          return `<div class="bc-seg ${cls}"></div>`;
+        }).join('');
+        const sdVal = sdIdxNum === 0 ? 'Rarely or never' : sdIdxNum === 1 ? 'Occasionally' : sdIdxNum === 2 ? 'A few nights a week' : sdIdxNum === 3 ? 'Most nights' : 'Every night';
+        const sdNote = sdIdxNum <= 1
+          ? "Pain isn't significantly disrupting your sleep — that's a real positive for your recovery capacity."
+          : sdIdxNum === 2
+          ? "Broken sleep a few nights a week reduces your overnight recovery window — one of the budget drains we address in the course."
+          : "Pain is regularly breaking your sleep, which keeps your budget in deficit. This is one of the most important things we work on together.";
+
+        /* ---- Rest row ---- */
+        const rtIdxNum = answers['rest'] ?? 2;
+        const rtSegs = [0,1,2,3].map(i => {
+          const cls = i !== rtIdxNum ? '' : rtIdxNum === 0 ? 'seg-good' : rtIdxNum === 1 ? 'seg-mid' : 'seg-low';
+          return `<div class="bc-seg ${cls}"></div>`;
+        }).join('');
+        const rtVal = rtIdxNum === 0 ? 'Yes, consistently' : rtIdxNum === 1 ? 'Sometimes' : rtIdxNum === 2 ? 'Rarely right now' : 'Almost never';
+        const rtNote = rtIdxNum === 0
+          ? "Rest is genuinely restoring you — your nervous system has some capacity to recuperate."
+          : rtIdxNum === 1
+          ? "Rest helps sometimes but not reliably — building more consistent recovery into your routine is something the course will help with."
+          : "When rest doesn't restore you, your nervous system stays in an alert state — spending resources faster than you can replace them. This is something we address directly in the course.";
+
+        return `
+        <div class="bc-row">
+          <div class="bc-icon bc-icon-sleep">🌙</div>
+          <div class="bc-content">
+            <div class="bc-top"><span class="bc-label">Sleep per night</span><span class="bc-val">${sleepHoursLabel}</span></div>
+            <div class="bc-scale">${shSegs}</div>
+            <div class="bc-ideal">Ideal: 7–8 hrs</div>
+            <div class="bc-note">${shNote}</div>
+          </div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-icon bc-icon-disrupt">💤</div>
+          <div class="bc-content">
+            <div class="bc-top"><span class="bc-label">Pain disrupts sleep</span><span class="bc-val">${sdVal}</span></div>
+            <div class="bc-scale">${sdSegs}</div>
+            <div class="bc-ideal">Goal: rarely or never</div>
+            <div class="bc-note">${sdNote}</div>
+          </div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-icon bc-icon-rest">✨</div>
+          <div class="bc-content">
+            <div class="bc-top"><span class="bc-label">Rest feels restorative</span><span class="bc-val">${rtVal}</span></div>
+            <div class="bc-scale">${rtSegs}</div>
+            <div class="bc-ideal">Goal: consistently yes</div>
+            <div class="bc-note">${rtNote}</div>
+          </div>
+        </div>`;
+      })()}</div>
+    </div>
+
+    <!-- Window of Tolerance -->
+    <div class="card results-section wot-section">
+      <h3 class="section-h3" style="margin-bottom:4px">Your nervous system state</h3>
+      <p class="section-intro" style="margin-bottom:14px">The Window of Tolerance is the zone where your nervous system can function without tipping into overload or shutdown. A narrower window means your system is spending more resources just staying regulated, leaving less in reserve for recovery. We're going to work on widening that window so that more of your daily life happens in the regulated zone.</p>
+      <div class="wot-charts">
+        <div class="wot-chart-wrap">
+          <div class="wot-chart-title">A narrow window</div>
+          ${renderWoT('narrow')}
+        </div>
+        <div class="wot-chart-wrap">
+          <div class="wot-chart-title">A wider window</div>
+          ${renderWoT('regulated')}
+        </div>
+      </div>
+      <div class="wot-signals-label">Signals from your answers</div>
+      <div class="wot-pills">
+        ${wotSignals.length > 0
+          ? wotSignals.map(s => `
+            <div class="wot-pill ${s.type}">
+              <span class="wot-pill-icon">${s.type === 'hyper' ? '↑' : s.type === 'freeze' ? '↓' : '✓'}</span>
+              ${s.text}
+            </div>`).join('')
+          : ''}
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);line-height:1.7;margin-top:16px">The daily resets you'll find within the course will give you the tools to manage on the days when you can feel you're already in a narrower state.</p>
+    </div>
+
+    <!-- Roadmap -->
+    <div class="card">
+      <div class="roadmap-head">
+        <h2>Your roadmap out of pain</h2>
+        <p>Here's what the next 5 days will look like.</p>
+      </div>
+      <div class="roadmap-rows">
+
+        <div class="roadmap-row">
+          <div class="rm-icon rm-d1"><div class="rm-num">1</div><div class="rm-lbl">Day</div></div>
+          <div class="rm-content">
+            <div class="rm-title">Why your pain is still there</div>
+            <p class="rm-copy">We start by explaining the science of chronic pain and the involvement of the nervous system. Studies show that chronic pain can be improved in 50% of cases just by understanding how it works!</p>
+          </div>
+        </div>
+        <div class="rm-divider"></div>
+
+        <div class="roadmap-row">
+          <div class="rm-icon rm-d2"><div class="rm-num">2</div><div class="rm-lbl">Day</div></div>
+          <div class="rm-content">
+            <div class="rm-title">Learning to read your body</div>
+            ${triggerCounts.nervous > 0 ? `<span class="rm-pill ns">Nervous system triggers in your profile</span>` : ''}
+            ${triggerCounts.hormonal > 0 ? `<span class="rm-pill hormonal">Hormonal triggers in your profile</span>` : ''}
+            ${triggerCounts.physical > 0 ? `<span class="rm-pill sensory">Physical triggers in your profile</span>` : ''}
+            <p class="rm-copy">Day 2 is when we start mapping out your triggers from your personal pain picture, so we can start catching and interrupting those patterns early.</p>
+          </div>
+        </div>
+        <div class="rm-divider"></div>
+
+        <div class="roadmap-row">
+          <div class="rm-icon rm-d3"><div class="rm-num">3</div><div class="rm-lbl">Day</div></div>
+          <div class="rm-content">
+            <div class="rm-title">Your first full reset</div>
+            <p class="rm-copy">We'll be learning how to get the most out of a 5-10 minute reset by signalling safety to your nervous system and addressing any stiffness or tension. You'll also learn how to use different techniques and resets for a range of situations.</p>
+          </div>
+        </div>
+        <div class="rm-divider"></div>
+
+        <div class="roadmap-row">
+          <div class="rm-icon rm-d4"><div class="rm-num">4</div><div class="rm-lbl">Day</div></div>
+          <div class="rm-content">
+            <div class="rm-title">Your pelvis, your posture and your hormones</div>
+            ${pct.hormonal > 30 || triggerCounts.hormonal > 0 ? `<span class="rm-pill hormonal">Hormonal influence in your profile</span>` : ''}
+            <p class="rm-copy">Pelvic posture, the pelvic floor and hormonal shifts all feed into back pain. This day covers all three and gives you a practical framework for your own patterns.</p>
+          </div>
+        </div>
+        <div class="rm-divider"></div>
+
+        <div class="roadmap-row">
+          <div class="rm-icon rm-d5"><div class="rm-num">5</div><div class="rm-lbl">Day</div></div>
+          <div class="rm-content">
+            <div class="rm-title">Making this yours for the long term</div>
+            ${pct.lifestyle > 50 ? `<span class="rm-pill lifestyle">Life demands in your profile</span>` : ''}
+            <p class="rm-copy">Our final day is about slotting everything we've learned into your life and building a toolkit that is going to work for you, so you can keep making progress every day and feeling prepared for new or challenging situations.</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="footer-row">
+        <button class="btn btn-ghost" id="restart-btn">Retake the quiz</button>
+      </div>
+    </div>
+
+    ${flags.length > 0 ? `
+    <div class="card results-section" style="margin-top:16px">
+      <h2 style="font-family:var(--font-head);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-soft);margin:0 0 6px">A few things the questionnaire has flagged</h2>
+      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 20px;line-height:1.6">Based on your answers, there are a few things worth being aware of as you start the course.</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        ${flags.map(f => `
+        <div style="background:#faf7f4;border-radius:12px;padding:16px 18px">
+          <p style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--ink);margin:0 0 6px">${f.title}</p>
+          <p style="font-size:14px;color:var(--ink-soft);line-height:1.65;margin:0">${f.body}</p>
+        </div>`).join('')}
+      </div>
+    </div>` : ''}
+
+  `;
+
+  /* Inject radar */
+  document.getElementById('radar-wrap-result').innerHTML = renderRadar(pct);
+
+  resultsScreen.hidden = false;
+  document.getElementById('brand-header').hidden = true;
+  window.scrollTo(0, 0);
+
+  /* Restart */
+  document.getElementById('restart-btn').addEventListener('click', () => {
+    Object.keys(answers).forEach(k => delete answers[k]);
+    current = 0;
+    resultsScreen.hidden = true;
+    introScreen.hidden   = false;
+  });
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function pctOf({ score, max }) {
+  return Math.min(100, Math.round((score / max) * 100));
+}
+
+function barRow(label, p, colour, copyText) {
+  return `
+    <div class="bar-card">
+      <div class="bar-card-label">${label}</div>
+      <div class="bar-card-tier">${tierLabel(p)}</div>
+      <div class="bar-track"><div class="bar-fill ${colour}" style="width:${p}%"></div></div>
+      <p class="bar-card-copy">${copyText}</p>
+    </div>`;
+}
+
+/* ============================================================
+   RADAR CHART — clean diamond, 4 influencing dimensions
+   ============================================================ */
+const RADAR_DIMS   = ['nervous','sensory','hormonal','lifestyle'];
+const RADAR_CONFIG = {
+  nervous:   { label: ['Nervous', 'System'],    dot: '#c9a830', textCol: '#8a7020' },
+  sensory:   { label: ['Sensory', 'Overwhelm'], dot: '#b8c4b0', textCol: '#506040' },
+  hormonal:  { label: ['Hormones'],             dot: '#c9a0a0', textCol: '#8a4858' },
+  lifestyle: { label: ['Lifestyle', 'Load'],    dot: '#c8b898', textCol: '#7a6a50' }
+};
+
+function renderRadar(pct) {
+  const cx = 220, cy = 160, R = 100;
+  // Diamond axes: top=nervous, right=sensory, bottom=hormonal, left=lifestyle
+  const axes = [
+    { dx:  0, dy: -1 },
+    { dx:  1, dy:  0 },
+    { dx:  0, dy:  1 },
+    { dx: -1, dy:  0 }
+  ];
+
+  function tip(i, frac=1) {
+    return [ cx + axes[i].dx * R * frac, cy + axes[i].dy * R * frac ];
+  }
+
+  // Grid
+  let grid = '';
+  [0.25, 0.5, 0.75, 1].forEach(l => {
+    const pts = axes.map((_,i) => tip(i,l).join(',')).join(' ');
+    grid += `<polygon points="${pts}" fill="none" stroke="#e8e0d8" stroke-width="1"/>`;
+  });
+
+  // Axes
+  const axLines = axes.map((_,i) => {
+    const [x,y] = tip(i);
+    return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#e0d8d0" stroke-width="1"/>`;
+  }).join('');
+
+  // Data polygon
+  const dataPts = RADAR_DIMS.map((d,i) => tip(i, pct[d]/100).join(',')).join(' ');
+
+  // Dots
+  const dots = RADAR_DIMS.map((d,i) => {
+    const [x,y] = tip(i, pct[d]/100);
+    return `<circle cx="${x}" cy="${y}" r="7" fill="${RADAR_CONFIG[d].dot}" stroke="white" stroke-width="2.5"/>`;
+  }).join('');
+
+  // Labels
+  const labelOffset = R + 38;
+  const labels = RADAR_DIMS.map((d,i) => {
+    const ax = axes[i];
+    const lx = cx + ax.dx * labelOffset;
+    const ly = cy + ax.dy * labelOffset;
+    const anchor = 'middle';
+    const lines = RADAR_CONFIG[d].label;
+    const col   = RADAR_CONFIG[d].textCol;
+    const labelStyle = `font-family='Quattrocento Sans,sans-serif' font-size='11' font-weight='700' style='text-transform:uppercase;letter-spacing:0.06em'`;
+    if (lines.length === 1) {
+      return `<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="middle"
+        ${labelStyle} fill="#8A7866">${lines[0]}</text>`;
+    }
+    const gap = 9;
+    return `
+      <text x="${lx}" y="${ly - gap}" text-anchor="${anchor}"
+        ${labelStyle} fill="#8A7866">${lines[0]}</text>
+      <text x="${lx}" y="${ly + gap}" text-anchor="${anchor}"
+        ${labelStyle} fill="#8A7866">${lines[1]}</text>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 440 320" width="100%" style="display:block;max-width:480px;margin:0 auto">
+    ${grid}${axLines}
+    <polygon points="${dataPts}" fill="#d4b8aa" fill-opacity="0.2" stroke="#b0a898" stroke-width="2"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
+/* ============================================================
+   WINDOW OF TOLERANCE SVG — two fixed illustrative charts
+   Same wave path in both; zone boundaries differ.
+   ============================================================ */
+function renderWoT(mode) {
+  const w = 200, h = 160;
+
+  // Narrow: tight zones → wave clearly breaches both
+  // Regulated: wide zones → wave mostly stays inside, barely grazes the edges
+  const hyperY = mode === 'narrow' ? 42  : 14;
+  const hypoY  = mode === 'narrow' ? 108 : 140;
+  const wotH   = hypoY - hyperY;
+
+  // Same wave in both charts — varied organic shape with big peaks and troughs
+  const wave = `M0,75 C10,75 14,118 24,130 C34,142 42,80 52,65 C60,52 64,62 74,75 C84,88 88,75 98,55 C108,35 114,8 124,8 C134,8 138,75 148,100 C158,125 164,130 174,120 C180,112 186,90 200,80`;
+
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block;margin:0 auto">
+    <rect x="0" y="0"        width="${w}" height="${hyperY}"       fill="#f0e4a0"/>
+    <rect x="0" y="${hyperY}" width="${w}" height="${wotH}"         fill="#f0ebe0" opacity="0.9"/>
+    <rect x="0" y="${hypoY}"  width="${w}" height="${h - hypoY}"    fill="#d4e4c4"/>
+    <text x="4" y="11" font-family="'Quattrocento Sans',sans-serif" font-size="8" fill="#7a6010" font-weight="700">Hyperarousal</text>
+    <text x="4" y="${hyperY + 12}" font-family="'Quattrocento Sans',sans-serif" font-size="8" fill="#7a5a38" font-weight="700">Regulated</text>
+    <text x="4" y="${h - 4}" font-family="'Quattrocento Sans',sans-serif" font-size="8" fill="#3a5428" font-weight="700">Hypoarousal</text>
+    <path d="${wave}" fill="none" stroke="#9a7a6a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+</script>
+</body>
+</html>

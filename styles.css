@@ -1,0 +1,241 @@
+/* =====================================================
+   Katie Jean — Pain Profile Questionnaire
+   Brand palette, fonts and layout styles
+   (colours/fonts/logo sourced from claude.md)
+   ===================================================== */
+
+:root{
+  --bg: #F9F6F1;
+  --card: #FFFFFF;
+  --ink: #694E3A;
+  --ink-soft: #8A7866;
+  --accent: #6B7A5E;        /* brand accent (forest moss) */
+  --accent-soft: #EAF0E4;
+  --button-bg: #D4B8AA;
+  --button-text: #FDF8E9;
+  --sage: #6B7A5E;
+  --sage-soft: #EAF0E4;
+  --border: #F6F1EE;
+  --radius: 18px;
+  --font-head: 'PT Serif', Georgia, serif;
+  --font-body: 'Quattrocento Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  line-height: 1.6;
+}
+
+.app{
+  width: 100%;
+  max-width: 640px;
+}
+
+.brand-header{
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.brand-logo{
+  max-width: 480px;
+  width: 100%;
+  height: auto;
+}
+
+.demo-flag{
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  box-shadow: 0 8px 30px rgba(60, 40, 30, 0.06);
+}
+
+h1{
+  font-family: var(--font-head);
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 14px;
+  line-height: 1.2;
+  color: #d4b8aa;
+}
+
+h2{
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  line-height: 1.2;
+}
+
+p{ margin: 0 0 16px; color: var(--ink-soft); }
+
+/* ===== Intro screen ===== */
+#intro-screen p{ font-size: 16px; }
+
+.btn{
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--button-text);
+  background: var(--button-bg);
+  border: none;
+  border-radius: 999px;
+  padding: 14px 32px;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.btn:hover{ transform: translateY(-1px); opacity: 0.92; }
+.btn:disabled{ background: var(--border); color: var(--ink-soft); cursor: not-allowed; transform: none; }
+
+.btn-ghost{
+  background: none;
+  color: var(--ink-soft);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover{ background: var(--sage-soft); opacity: 1; }
+
+/* ===== Quiz screen ===== */
+.progress-track{
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.progress-fill{
+  height: 100%;
+  background: var(--sage);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.dimension-tag{
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin-bottom: 14px;
+}
+
+.question-text{
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  line-height: 1.2;
+}
+
+.options{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.option{
+  text-align: left;
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.option:hover{ border-color: var(--sage); }
+.option.selected{
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.nav-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== Results screen ===== */
+.radar-wrap{
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 24px;
+}
+
+.dimension-results{
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.dimension-result h3{
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dimension-result .score-pill{
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sage);
+  background: var(--sage-soft);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-family: var(--font-body);
+}
+
+.dimension-result p{ font-size: 15px; margin-bottom: 0; }
+
+.summary-block{
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  margin-top: 8px;
+}
+
+.summary-block p{ font-size: 15px; color: var(--ink); }
+
+.footer-row{
+  text-align: center;
+  margin-top: 28px;
+}
+
+@media (max-width: 480px){
+  .card{ padding: 28px 22px; }
+  h1{ font-size: 26px; }
+  .question-text{ font-size: 19px; }
+}
