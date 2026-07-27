@@ -1238,7 +1238,8 @@ const answers = {};
 /* ============================================================
    CONFIG
    ============================================================ */
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwB1jM9UFd62UJy9AhArhj-xLQeP7HylCeLEO3pKfT3-uda6d3GR2sQpY8LPuglQ6yD/exec';
+const SHEETS_URL  = 'https://script.google.com/macros/s/AKfycbwB1jM9UFd62UJy9AhArhj-xLQeP7HylCeLEO3pKfT3-uda6d3GR2sQpY8LPuglQ6yD/exec';
+const KAJABI_URL  = 'https://www.katie-jean.com/forms/2149653421/form_submissions';
 
 const introScreen    = document.getElementById('intro-screen');
 const quizScreen     = document.getElementById('quiz-screen');
@@ -1346,12 +1347,7 @@ function fillDemoAnswers() {
   answers['identity3']     = 3;
 }
 
-document.getElementById('preview-btn').addEventListener('click', () => {
-  fillDemoAnswers();
-  introScreen.hidden = true;
-  document.getElementById('brand-header').hidden = false;
-  showResults();
-});
+/* preview-btn removed — button no longer in HTML */
 
 /* ============================================================
    RENDER QUESTION
@@ -1518,6 +1514,29 @@ gateSubmitBtn.addEventListener('click', () => {
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
+  });
+
+  /* Submit to Kajabi form (fire and forget — creates/updates contact + triggers email automation) */
+  const kajabiBody = new URLSearchParams();
+  kajabiBody.append('form_submission[name]',      name);
+  kajabiBody.append('form_submission[email]',     email);
+  kajabiBody.append('form_submission[custom_2]',  resultsUrl);
+  kajabiBody.append('form_submission[custom_3]',  tiers.chronicity  || '');
+  kajabiBody.append('form_submission[custom_4]',  tiers.nervous     || '');
+  kajabiBody.append('form_submission[custom_5]',  tiers.sensory     || '');
+  kajabiBody.append('form_submission[custom_6]',  tiers.hormonal    || '');
+  kajabiBody.append('form_submission[custom_7]',  tiers.lifestyle   || '');
+  kajabiBody.append('form_submission[custom_8]',  tiers.impact      || '');
+  kajabiBody.append('form_submission[custom_9]',  payload.flags.neuropathy   ? 'Yes' : 'No');
+  kajabiBody.append('form_submission[custom_10]', payload.flags.pregnant     ? 'Yes' : 'No');
+  kajabiBody.append('form_submission[custom_11]', payload.flags.highNS       ? 'Yes' : 'No');
+  kajabiBody.append('form_submission[custom_12]', payload.flags.longstanding ? 'Yes' : 'No');
+
+  fetch(KAJABI_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: kajabiBody.toString()
   });
 
   /* Store name for results page and show results */
