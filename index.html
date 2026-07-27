@@ -745,6 +745,26 @@
     </div>
   </div>
 
+  <!-- ===== EMAIL GATE ===== -->
+  <div class="card intro-card" id="email-gate-screen" hidden>
+    <div class="intro-brand" style="border-bottom:1px solid var(--border);padding-bottom:20px">
+      <img src="logo.png" alt="Katie Jean" class="intro-logo">
+      <p class="intro-course-label">The 5 Day Back Reset</p>
+    </div>
+    <div class="intro-content">
+      <h1 style="color:var(--ink)">You're all done!</h1>
+      <p style="font-size:16px;margin-bottom:24px">Your results are on the next page. Pop your name and email in below — we'll also send you a private link so you can revisit your pain profile anytime.</p>
+      <input type="text" id="gate-name" class="name-input" placeholder="Your first name" autocomplete="given-name">
+      <input type="email" id="gate-email" class="name-input" placeholder="Your email address" autocomplete="email">
+      <label style="display:flex;align-items:flex-start;gap:12px;font-size:14px;color:var(--ink-soft);margin-bottom:24px;cursor:pointer;line-height:1.5">
+        <input type="checkbox" id="gate-consent" style="margin-top:3px;flex-shrink:0;accent-color:var(--accent);width:16px;height:16px">
+        I consent to my quiz responses being stored securely to personalise my results and help improve the course.
+      </label>
+      <button class="btn" id="gate-submit-btn" disabled style="width:100%;text-align:center">See my results →</button>
+      <p style="font-size:12px;color:var(--ink-soft);margin-top:12px;text-align:center">Your data is kept private and never shared with third parties.</p>
+    </div>
+  </div>
+
   <!-- ===== RESULTS ===== -->
   <div id="results-screen" hidden></div>
 
@@ -1215,10 +1235,16 @@ const answers = {};
 /* ============================================================
    ELEMENTS
    ============================================================ */
-const introScreen   = document.getElementById('intro-screen');
-const quizScreen    = document.getElementById('quiz-screen');
-const resultsScreen = document.getElementById('results-screen');
-const progressFill  = document.getElementById('progress-fill');
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwB1jM9UFd62UJy9AhArhj-xLQeP7HylCeLEO3pKfT3-uda6d3GR2sQpY8LPuglQ6yD/exec';
+
+const introScreen    = document.getElementById('intro-screen');
+const quizScreen     = document.getElementById('quiz-screen');
+const emailGateScreen = document.getElementById('email-gate-screen');
+const resultsScreen  = document.getElementById('results-screen');
+const progressFill   = document.getElementById('progress-fill');
 const dimensionTag  = document.getElementById('dimension-tag');
 const questionText  = document.getElementById('question-text');
 const optionsEl     = document.getElementById('options');
@@ -1248,12 +1274,11 @@ backBtn.addEventListener('click', () => {
 });
 
 skipBtn.addEventListener('click', () => {
-  // For skipable questions, record no answer and move on
   answers[QUESTIONS[current].id] = [];
   current++;
   if (current >= QUESTIONS.length) {
     quizScreen.hidden = true;
-    showResults();
+    showEmailGate();
   } else {
     renderQuestion();
   }
@@ -1262,7 +1287,7 @@ skipBtn.addEventListener('click', () => {
 nextBtn.addEventListener('click', () => {
   if (current === QUESTIONS.length - 1) {
     quizScreen.hidden = true;
-    showResults();
+    showEmailGate();
   } else {
     current++;
     renderQuestion();
@@ -1398,6 +1423,126 @@ function renderQuestion() {
 }
 
 /* ============================================================
+   EMAIL GATE
+   ============================================================ */
+function showEmailGate() {
+  emailGateScreen.hidden = false;
+  document.getElementById('brand-header').hidden = true;
+  window.scrollTo(0, 0);
+}
+
+const gateNameEl    = document.getElementById('gate-name');
+const gateEmailEl   = document.getElementById('gate-email');
+const gateConsentEl = document.getElementById('gate-consent');
+const gateSubmitBtn = document.getElementById('gate-submit-btn');
+
+function validateGate() {
+  const hasName    = gateNameEl.value.trim().length > 0;
+  const hasEmail   = gateEmailEl.value.trim().includes('@');
+  const hasConsent = gateConsentEl.checked;
+  gateSubmitBtn.disabled = !(hasName && hasEmail && hasConsent);
+}
+
+gateNameEl.addEventListener('input', validateGate);
+gateEmailEl.addEventListener('input', validateGate);
+gateConsentEl.addEventListener('change', validateGate);
+
+gateSubmitBtn.addEventListener('click', () => {
+  const name  = gateNameEl.value.trim();
+  const email = gateEmailEl.value.trim();
+
+  /* Encode answers into URL hash so results can be re-loaded */
+  const encoded    = btoa(JSON.stringify(answers));
+  const resultsUrl = window.location.origin + window.location.pathname + '#r=' + encoded;
+  window.history.replaceState(null, '', '#r=' + encoded);
+
+  /* Compute scores and flags for submission */
+  const { totals, pct } = computeScores();
+  const tiers = {};
+  Object.keys(pct).forEach(d => tiers[d] = tier(pct[d]));
+
+  const qFind = id => QUESTIONS.find(q => q.id === id);
+  const qualityAnswers = answers['quality'] || [];
+  const hasNeuropathy  = qualityAnswers.some(i => qFind('quality').options[i].neuropathy);
+  const lifeStageIdx   = answers['life_stage'];
+  const isPregnant     = lifeStageIdx === 3;
+
+  const labelAnswer = (id) => {
+    const q = qFind(id);
+    if (!q) return '';
+    const ans = answers[id];
+    if (ans === undefined || ans === null) return '';
+    if (Array.isArray(ans)) return ans.map(i => q.options[i] ? q.options[i].label : i).join(', ');
+    return q.options[ans] ? q.options[ans].label : ans;
+  };
+
+  const payload = {
+    name, email, consent: true, resultsUrl,
+    pct, tiers,
+    flags: {
+      neuropathy:   hasNeuropathy,
+      pregnant:     isPregnant,
+      highNS:       pct.nervous >= 71,
+      longstanding: (answers['duration'] !== undefined && answers['duration'] >= 3)
+    },
+    answers: {
+      location:      labelAnswer('location'),
+      duration:      labelAnswer('duration'),
+      severity:      labelAnswer('severity'),
+      variability:   labelAnswer('variability'),
+      quality:       labelAnswer('quality'),
+      triggers:      labelAnswer('triggers'),
+      diagnosis:     labelAnswer('diagnosis'),
+      small_tasks:   labelAnswer('small_tasks'),
+      switch_off:    labelAnswer('switch_off'),
+      stress_pain:   labelAnswer('stress_pain'),
+      sensory:       labelAnswer('sensory'),
+      life_stage:    labelAnswer('life_stage'),
+      hormonal:      labelAnswer('hormonal'),
+      sleep:         labelAnswer('sleep'),
+      sleep_hours:   labelAnswer('sleep_hours'),
+      rest:          labelAnswer('rest'),
+      activity_type: labelAnswer('activity_type'),
+      load:          labelAnswer('load'),
+      fatigue:       labelAnswer('fatigue'),
+      ns_state:      labelAnswer('ns_state'),
+      identity1:     labelAnswer('identity1'),
+      identity2:     labelAnswer('identity2'),
+      identity3:     labelAnswer('identity3')
+    }
+  };
+
+  /* Submit to Google Sheets (fire and forget) */
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  /* Store name for results page and show results */
+  emailGateScreen.hidden = true;
+  window._firstName = name;
+  showResults();
+});
+
+/* ============================================================
+   URL HASH — load saved results on return visit
+   ============================================================ */
+(function checkHash() {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#r=')) return;
+  try {
+    const decoded = JSON.parse(atob(hash.slice(3)));
+    Object.assign(answers, decoded);
+    introScreen.hidden    = true;
+    emailGateScreen.hidden = true;
+    document.getElementById('brand-header').hidden = true;
+    showResults();
+  } catch(e) { /* invalid hash — ignore */ }
+})();
+
+/* ============================================================
    SCORING
    ============================================================ */
 function computeScores() {
@@ -1519,8 +1664,7 @@ function showResults() {
   /* Personalisation extracts */
   const qFind = id => QUESTIONS.find(q => q.id === id);
 
-  // TODO: replace with Kajabi first name merge tag when embedded
-  const firstName    = 'you';
+  const firstName = window._firstName || 'you';
 
   const locationAnswers = answers['location'] || [];
   const location = locationAnswers.length > 0
