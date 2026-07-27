@@ -1547,18 +1547,18 @@ gateSubmitBtn.addEventListener('click', () => {
 /* ============================================================
    URL HASH — load saved results on return visit
    ============================================================ */
-(function checkHash() {
+window.addEventListener('load', function checkHash() {
   const hash = window.location.hash;
   if (!hash.startsWith('#r=')) return;
   try {
     const decoded = JSON.parse(atob(hash.slice(3)));
     Object.assign(answers, decoded);
-    introScreen.hidden    = true;
+    introScreen.hidden     = true;
     emailGateScreen.hidden = true;
     document.getElementById('brand-header').hidden = true;
     showResults();
-  } catch(e) { /* invalid hash — ignore */ }
-})();
+  } catch(e) { console.error('Hash load error:', e); }
+});
 
 /* ============================================================
    SCORING
